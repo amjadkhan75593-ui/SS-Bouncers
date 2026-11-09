@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SS Bouncer’s invoice form</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0B0909;--panel:#161212;--ink:#f4eff1;--mute:#cdb9c0;--line:rgba(244,239,241,.18);--accent:#AD14F2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{display:grid;grid-template-columns:minmax(300px,410px) 1fr;gap:24px;max-width:1200px;margin:0 auto;padding:20px}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}}
+.form{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;align-self:start}
+h1{font:400 30px/1 Anton,"Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em;margin:0 0 6px}
+.sub{color:var(--mute);margin:0 0 14px}
+fieldset{border:0;border-top:1px solid var(--line);margin:14px 0 0;padding:12px 0 0}
+legend{font-weight:600;padding-right:8px}
+label{display:block;font-size:13px;color:var(--mute);margin:8px 0 3px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+textarea{min-height:64px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{display:grid;grid-template-columns:1fr 60px 86px 32px;gap:6px;margin-top:6px;align-items:center}
+.item button{padding:6px}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 12px}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;width:100%;padding:11px;margin-top:16px}
+
+/* invoice sheet: always white, prints as A4 */
+.sheet{background:#fff;color:#1c1c20;border-radius:3px;overflow-x:auto;color-scheme:light;border-top:8px solid #AD14F2;font-size:13.5px}
+.sheet *{color:inherit}
+.in{padding:34px 36px 28px;min-width:560px}
+.hd{display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+.logo{font:400 34px/1 Anton,"Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.05em}
+.logo span{color:#AD14F2}
+.muted{color:#5b5b66!important;white-space:pre-line}
+.ttl{text-align:right}
+.ttl b{display:block;font:400 30px/1 Anton,"Arial Narrow",Impact,sans-serif;letter-spacing:.08em;color:#AD14F2!important}
+.meta{display:grid;grid-template-columns:auto auto;gap:2px 16px;justify-content:end;margin-top:8px;text-align:right}
+.meta i{font-style:normal;color:#5b5b66!important}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0 18px}
+.box{background:#f6f3f8;border-left:3px solid #AD14F2;padding:12px 14px;border-radius:0 3px 3px 0}
+.box h4{margin:0 0 4px;font-size:12px;letter-spacing:.04em;color:#7d12ad!important}
+table{width:100%;border-collapse:collapse}
+thead th{background:#AD14F2;color:#fff!important;text-align:left;font-weight:600;padding:9px 10px;font-size:12.5px}
+td{padding:10px;border-bottom:1px solid #e6e2ea;vertical-align:top}
+tbody tr:nth-child(even) td{background:#fbfafc}
+.r{text-align:right!important}
+.sum{display:grid;grid-template-columns:1fr 290px;gap:24px;margin-top:16px;align-items:start}
+.words{padding-top:6px}
+.words b{display:block;font-size:12px;color:#7d12ad!important;margin-bottom:2px}
+.tot div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee}
+.tot .grand{background:#1c1c20;color:#fff!important;padding:10px 12px;margin-top:8px;border:0;font-weight:600;font-size:15px;border-radius:2px}
+.tot .grand span{color:#fff!important}
+.low{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}
+.low b{display:block;font-size:12px;color:#7d12ad!important;margin-bottom:3px}
+.sig{text-align:right;align-self:end;padding-top:46px}
+.sig div{border-top:1px solid #1c1c20;display:inline-block;min-width:200px;padding-top:6px;text-align:center}
+.ft{margin-top:26px;padding-top:12px;border-top:1px solid #e6e2ea;text-align:center;font-size:12px}
+@page{size:A4;margin:10mm}
+@media print{
+ body{background:#fff}.no-print{display:none!important}
+ .wrap{display:block;padding:0;max-width:none}
+ .sheet{overflow:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .in{min-width:0}
+ :root{padding:0}
+}
+@media (max-width:560px){.boxes,.low,.sum{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="form no-print">
+<h1>Invoice form</h1>
+<p class="sub">Fill in the details. The invoice updates as you type.</p>
+
+<fieldset><legend>Your agency</legend>
+<label for="aName">Agency name</label><input id="aName" value="SS Bouncer’s">
+<label for="aAddr">Address</label><textarea id="aAddr">Pune, Maharashtra, India
+Contact: Salman Shaikh, Event Manager</textarea>
+<div class="two"><div><label for="aPhone">Phone</label><input id="aPhone" value="+91 92843 75855"></div>
+<div><label for="aEmail">Email or Instagram</label><input id="aEmail" value="@salman7184shaikh"></div></div>
+<div class="two"><div><label for="aGst">GSTIN (if registered)</label><input id="aGst"></div>
+<div><label for="aPan">PAN (optional)</label><input id="aPan"></div></div>
+</fieldset>
+
+<fieldset><legend>Client</legend>
+<label for="cName">Client name</label><input id="cName" value="Client Name">
+<label for="cAddr">Client address</label><textarea id="cAddr"></textarea>
+<label for="cGst">Client GSTIN (optional)</label><input id="cGst">
+</fieldset>
+
+<fieldset><legend>Invoice details</legend>
+<div class="two"><div><label for="iNo">Invoice number</label><input id="iNo" value="SSB-001"></div>
+<div><label for="iDate">Invoice date</label><input id="iDate" type="date"></div></div>
+<div class="two"><div><label for="iDue">Due date</label><input id="iDue" type="date"></div>
+<div><label for="sac">SAC code</label><input id="sac" value="998525"></div></div>
+<label for="iEvent">Event and venue</label><input id="iEvent" placeholder="e.g. Wedding reception, Hotel name, 8 Nov 2026">
+</fieldset>
+
+<fieldset><legend>Services</legend>
+<div id="items"></div>
+<button type="button" id="add" style="margin-top:10px">Add line</button>
+<div class="two">
+<div><label for="gst">GST %</label><input id="gst" type="number" min="0" step="0.5" value="18"></div>
+<div><label for="adv">Advance paid (₹)</label><input id="adv" type="number" min="0" value="0"></div></div>
+</fieldset>
+
+<fieldset><legend>Payment and notes</legend>
+<label for="pay">Payment details</label><textarea id="pay">Bank: 
+Account name: 
+Account no.: 
+IFSC: 
+UPI: </textarea>
+<label for="notes">Terms and notes</label><textarea id="notes">Payment is due by the due date shown above.
+Please quote the invoice number when paying.</textarea>
+</fieldset>
+
+<button type="button" class="primary" id="print">Print or save as PDF</button>
+</section>
+
+<section class="sheet" id="sheet" aria-live="polite"></section>
+</main>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function inr(n){return '₹'+(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmtDate(v){if(!v)return '–';var d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+function iso(d){return d.toISOString().slice(0,10)}
+var O=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],T=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function two(n){return n<20?O[n]:T[Math.floor(n/10)]+(n%10?' '+O[n%10]:'')}
+function three(n){return (n>99?O[Math.floor(n/100)]+' Hundred'+(n%100?' ':''):'')+(n%100?two(n%100):'')}
+function words(n){if(!n)return 'Zero';var p=[],c=Math.floor(n/1e7),l=Math.floor(n/1e5)%100,t=Math.floor(n/1e3)%100,h=n%1000;
+ if(c)p.push(three(c)+' Crore');if(l)p.push(two(l)+' Lakh');if(t)p.push(two(t)+' Thousand');if(h)p.push(three(h));return p.join(' ')}
+function rupees(x){var r=Math.floor(Math.round(x*100)/100),ps=Math.round((x-r)*100);
+ return 'Rupees '+words(r)+(ps?' and '+two(ps)+' Paise':'')+' Only'}
+var today=new Date();$('iDate').value=iso(today);
+$('iDue').value=iso(new Date(today.getTime()+7*864e5));
+
+function addItem(desc,qty,rate){
+ var row=document.createElement('div');row.className='item';
+ row.innerHTML='<input class="d" placeholder="Service (e.g. Bouncer, night shift)" aria-label="Service description">'+
+ '<input class="q" type="number" min="0" step="any" aria-label="Quantity">'+
+ '<input class="p" type="number" min="0" step="any" aria-label="Rate in rupees">'+
+ '<button type="button" aria-label="Remove line">×</button>';
+ row.querySelector('.d').value=desc||'';row.querySelector('.q').value=qty||'';row.querySelector('.p').value=rate||'';
+ row.querySelector('button').onclick=function(){row.remove();render()};
+ $('items').appendChild(row);
+}
+addItem('Bouncer, 8-hour shift',4,1500);addItem('Supervisor, 8-hour shift',1,2200);
+$('add').onclick=function(){addItem();render()};
+
+function render(){
+ var rows=[].slice.call($('items').children),sub=0,body='',n=0,sac=$('sac').value;
+ rows.forEach(function(r){
+  var d=r.querySelector('.d').value,q=parseFloat(r.querySelector('.q').value)||0,p=parseFloat(r.querySelector('.p').value)||0,a=q*p;
+  if(!d&&!q&&!p)return;sub+=a;n++;
+  body+='<tr><td>'+n+'</td><td>'+esc(d)+'</td><td>'+esc(sac)+'</td><td class="r">'+q+'</td><td class="r">'+inr(p)+'</td><td class="r">'+inr(a)+'</td></tr>';
+ });
+ var g=parseFloat($('gst').value)||0,tax=sub*g/100,total=Math.round((sub+tax)*100)/100,adv=parseFloat($('adv').value)||0,bal=total-adv;
+ var nm=$('aName').value,sp=nm.indexOf(' '),logo=sp>0?esc(nm.slice(0,sp))+' <span>'+esc(nm.slice(sp+1))+'</span>':esc(nm);
+ var contact=[$('aPhone').value,$('aEmail').value].filter(Boolean).map(esc).join('  |  ');
+ var ids=[$('aGst').value?'GSTIN: '+esc($('aGst').value):'',$('aPan').value?'PAN: '+esc($('aPan').value):''].filter(Boolean).join('  |  ');
+ var taxRows=g?('<div><span>CGST @ '+g/2+'%</span><span>'+inr(tax/2)+'</span></div><div><span>SGST @ '+g/2+'%</span><span>'+inr(tax/2)+'</span></div>'):'';
+ var title=($('aGst').value&&g)?'TAX INVOICE':'INVOICE';
+ $('sheet').innerHTML='<div class="in">'+
+ '<div class="hd"><div><div class="logo">'+logo+'</div><div class="muted" style="margin-top:6px">'+esc($('aAddr').value)+'\n'+contact+(ids?'\n'+ids:'')+'</div></div>'+
+ '<div class="ttl"><b>'+title+'</b><div class="meta"><i>Invoice no.</i><span>'+esc($('iNo').value)+'</span><i>Date</i><span>'+fmtDate($('iDate').value)+'</span><i>Due date</i><span>'+fmtDate($('iDue').value)+'</span></div></div></div>'+
+ '<div class="boxes"><div class="box"><h4>Billed to</h4><b>'+esc($('cName').value)+'</b><div class="muted">'+esc($('cAddr').value)+($('cGst').value?'\nGSTIN: '+esc($('cGst').value):'')+'</div></div>'+
+ '<div class="box"><h4>Event and venue</h4><div class="muted">'+(esc($('iEvent').value)||'–')+'</div></div></div>'+
+ '<table><thead><tr><th>#</th><th>Description</th><th>SAC</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead><tbody>'+body+'</tbody></table>'+
+ '<div class="sum"><div class="words"><b>Amount in words</b>'+rupees(bal)+'</div>'+
+ '<div class="tot"><div><span>Subtotal</span><span>'+inr(sub)+'</span></div>'+taxRows+
+ (adv?'<div><span>Total</span><span>'+inr(total)+'</span></div><div><span>Advance paid</span><span>− '+inr(adv)+'</span></div>':'')+
+ '<div class="grand"><span>'+(adv?'Balance due':'Total due')+'</span><span>'+inr(bal)+'</span></div></div></div>'+
+ '<div class="low"><div><b>Payment details</b><div class="muted">'+esc($('pay').value)+'</div><b style="margin-top:12px">Terms and notes</b><div class="muted">'+esc($('notes').value)+'</div></div>'+
+ '<div class="sig"><div>Authorised signatory<br><span class="muted">for '+esc(nm)+'</span></div></div></div>'+
+ '<div class="ft muted">Thank you for choosing '+esc(nm)+'.</div></div>';
+}
+document.querySelector('.form').addEventListener('input',render);
+$('print').onclick=function(){try{window.print()}catch(e){}};
+render();
+})();
+</script>
+</body>
+</html>
