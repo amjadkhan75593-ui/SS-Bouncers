@@ -328,6 +328,24 @@ section,footer{box-shadow:none!important}
 .chip.on,.totop,.lbx,.fab-head,.social a.ph{color:var(--on-brass)!important}
 .btn.ghost{color:var(--ink)}
 .hero h1{font-weight:400}
+.adm{max-width:1080px}
+.adm .gate{padding:1rem;border:1px solid var(--line);border-radius:8px;background:var(--bg2);max-width:34rem}
+.adm .gate code{word-break:break-all;color:var(--brass)}
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.5rem}
+.tabs button{font:inherit;font-size:.95rem;font-weight:600;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.5rem 1rem;cursor:pointer}
+.tabs button.on{background:var(--brass);color:var(--on-brass);border-color:var(--brass)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.cards div{padding:1.1rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.cards b{display:block;font:400 2.6rem/1 var(--display);color:var(--brass)}
+.adm .tw{overflow-x:auto;margin:.5rem 0 1.25rem}
+.adm table{width:100%;border-collapse:collapse;min-width:640px;font-size:.93rem}
+.adm th,.adm td{border:1px solid var(--line);padding:.5rem .65rem;text-align:left;vertical-align:top;color:var(--muted)}
+.adm th{color:var(--brass);white-space:nowrap}
+.adm td pre{margin:0;white-space:pre-wrap;font:inherit}
+.adm .sm{font:inherit;font-size:.85rem;padding:.3rem .6rem;border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer;width:auto}
+.adm .bar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin:0 0 .75rem}
+.adm form.sf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:0 0 1.5rem}
+.adm .note{color:var(--muted);font-size:.9rem}
 </style>
 </head>
 <body>
@@ -845,6 +863,15 @@ section,footer{box-shadow:none!important}
   </form>
 </div></section>
 
+<section data-v="admin"><div class="wrap adm">
+  <h2>Admin dashboard</h2>
+  <div class="gate auth" id="admGate"><p>Please <a href="#login">log in</a> with your admin account.</p></div>
+  <div id="admApp" hidden>
+    <div class="tabs" id="admTabs"><button type="button" data-t="overview" class="on">Overview</button><button type="button" data-t="enquiries">Bookings &amp; enquiries</button><button type="button" data-t="bouncers">Bouncers</button><button type="button" data-t="shifts">Duty &amp; working hours</button><button type="button" data-t="accounts">Accounts</button></div>
+    <div id="admBody"><p>Loading…</p></div>
+  </div>
+</div></section>
+
 <section data-v="terms" id="terms">
   <div class="wrap terms">
     <h2>Terms of Service &amp; Policies</h2>
@@ -983,7 +1010,7 @@ section,footer{box-shadow:none!important}
   var links=[].slice.call(document.querySelectorAll('.nav>a[href^="#"],.nav>.dd>a[href^="#"]')).filter(function(a){return !a.classList.contains('btn');}),
       secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
   function act(){var cur=-1;secs.forEach(function(s,i){if(s&&s.getBoundingClientRect().top<=140)cur=i;});links.forEach(function(a,i){a.classList.toggle('active',i===cur);});}
-  var views={'':'home','home':'home','who-we-are':'about-us','about-us':'about-us','what-we-do':'what-we-do','events':'events','hire-bouncers':'hire-bouncers','post-event':'post-event','join-bouncer':'join-bouncer','bouncer-jobs':'bouncer-jobs','faq':'faq','contact':'contact','terms':'terms','login':'login','signup':'signup','register':'register'},
+  var views={'':'home','home':'home','who-we-are':'about-us','about-us':'about-us','what-we-do':'what-we-do','events':'events','hire-bouncers':'hire-bouncers','post-event':'post-event','join-bouncer':'join-bouncer','bouncer-jobs':'bouncer-jobs','faq':'faq','contact':'contact','terms':'terms','login':'login','signup':'signup','register':'register','admin':'admin'},
       vEls=[].slice.call(document.querySelectorAll('[data-v]')),last=null;
   function route(){
     var h=location.hash.replace('#',''),v=views.hasOwnProperty(h)?views[h]:'home';
@@ -992,7 +1019,7 @@ section,footer{box-shadow:none!important}
     links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+v);});
     if(last!==null&&last!==v)window.scrollTo({top:0,behavior:'auto'});
     last=v;chk();
-    var T={home:'SS Bouncer\u2019s \u2013 Professional Bouncer & Security Services in Pune','about-us':'About SS Bouncer\u2019s \u2013 Security & Event Staffing Platform','what-we-do':'Professional Bouncer & Event Security Services in Pune','hire-bouncers':'Hire Professional Bouncers in Pune',events:'Events Hiring Bouncers in Pune','bouncer-jobs':'Bouncer Jobs in Pune \u2013 Apply for Event Security Jobs','join-bouncer':'Register as a Bouncer \u2013 Find Event Jobs','post-event':'Hire Bouncers for Your Event \u2013 Post a Requirement',contact:'Contact SS Bouncer\u2019s \u2013 Security Agency in Pune',faq:'FAQs \u2013 SS Bouncer\u2019s',terms:'Terms of Service & Policies \u2013 SS Bouncer\u2019s',login:'Log in \u2013 SS Bouncer\u2019s',signup:'Create account \u2013 SS Bouncer\u2019s',register:'Bouncer registration \u2013 SS Bouncer\u2019s'};
+    var T={home:'SS Bouncer\u2019s \u2013 Professional Bouncer & Security Services in Pune','about-us':'About SS Bouncer\u2019s \u2013 Security & Event Staffing Platform','what-we-do':'Professional Bouncer & Event Security Services in Pune','hire-bouncers':'Hire Professional Bouncers in Pune',events:'Events Hiring Bouncers in Pune','bouncer-jobs':'Bouncer Jobs in Pune \u2013 Apply for Event Security Jobs','join-bouncer':'Register as a Bouncer \u2013 Find Event Jobs','post-event':'Hire Bouncers for Your Event \u2013 Post a Requirement',contact:'Contact SS Bouncer\u2019s \u2013 Security Agency in Pune',faq:'FAQs \u2013 SS Bouncer\u2019s',terms:'Terms of Service & Policies \u2013 SS Bouncer\u2019s',login:'Log in \u2013 SS Bouncer\u2019s',signup:'Create account \u2013 SS Bouncer\u2019s',register:'Bouncer registration \u2013 SS Bouncer\u2019s',admin:'Admin dashboard \u2013 SS Bouncer\u2019s'};
     document.title=T[v]||document.title;
   }
   window.addEventListener('hashchange',route);route();
@@ -1201,7 +1228,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.hidden=tr
 </script>
 <script type="module">
 /* ===== PASTE YOUR FIREBASE SETTINGS HERE (see steps) ===== */
-const firebaseConfig={apiKey:"PASTE_API_KEY",authDomain:"PASTE_AUTH_DOMAIN",projectId:"PASTE_PROJECT_ID",appId:"PASTE_APP_ID"};
+const firebaseConfig={apiKey:"AIzaSyAnPhsqQFmAYUEvyx6Kl56PqHoYXR8a844",authDomain:"ss-bouncers-32d2b.firebaseapp.com",projectId:"ss-bouncers-32d2b",storageBucket:"ss-bouncers-32d2b.firebasestorage.app",messagingSenderId:"70658805070",appId:"1:70658805070:web:70f74ea5631879eb1be21f"};
 /* ========================================================= */
 const $=function(q){return document.querySelector(q)};
 const acct=$('#acct'),gate=$('#regGate'),fReg=$('#fReg');
@@ -1217,7 +1244,7 @@ function msg(e){var c=(e&&e.code)||'';
   return 'Something went wrong. Please try again.';}
 if(!ready){
   ['#fLogin','#fSignup','#fReg'].forEach(function(q){var f=$(q);f.hidden=false;f.addEventListener('submit',function(e){e.preventDefault();say(f,'Accounts are not set up yet. Please contact us on WhatsApp.','err');});});
-  gate.hidden=true;
+  gate.hidden=true;$('#admGate').innerHTML='<p>Accounts are not set up yet.</p>';
 }else{
   const A=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
   const U=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
@@ -1228,6 +1255,7 @@ if(!ready){
     user=u;
     acct.textContent=u?'Log out':'Login';acct.setAttribute('href',u?'#home':'#login');
     gate.hidden=!!u;fReg.hidden=!u;
+    if(u){try{await D.setDoc(D.doc(db,'users',u.uid),{email:u.email,name:u.displayName||'',lastLogin:D.serverTimestamp()},{merge:true});}catch(e){}}
     if(u){fReg.name.value=fReg.name.value||u.displayName||'';
       try{var d=await D.getDoc(D.doc(db,'bouncers',u.uid));if(d.exists()){var v=d.data();['name','phone','city','years','role','availability','about'].forEach(function(k){if(v[k]!==undefined)fReg[k].value=v[k];});say(fReg,'Your saved registration is loaded. You can update it.','ok');}}catch(e){}}
   });
@@ -1241,11 +1269,83 @@ if(!ready){
     if(f.password.value!==f.confirm.value){say(f,'Passwords do not match.','err');return;}
     say(f,'Creating account…');
     try{var c=await U.createUserWithEmailAndPassword(auth,f.email.value.trim(),f.password.value);
-      await U.updateProfile(c.user,{displayName:f.name.value.trim()});f.reset();say(f,'');location.hash='#register';}catch(x){say(f,msg(x),'err');}});
+      await U.updateProfile(c.user,{displayName:f.name.value.trim()});try{await D.setDoc(D.doc(db,'users',c.user.uid),{email:c.user.email,name:f.name.value.trim(),createdAt:D.serverTimestamp(),lastLogin:D.serverTimestamp()},{merge:true});}catch(e){}try{await D.setDoc(D.doc(db,'users',c.user.uid),{name:f.name.value.trim()},{merge:true});}catch(x){}f.reset();say(f,'');location.hash='#register';}catch(x){say(f,msg(x),'err');}});
   fReg.addEventListener('submit',async function(e){e.preventDefault();if(!user)return;say(fReg,'Saving…');
     var o={};['name','phone','city','role','availability','about'].forEach(function(k){o[k]=fReg[k].value.trim();});
     o.years=Number(fReg.years.value);o.email=user.email;o.updatedAt=D.serverTimestamp();
     try{await D.setDoc(D.doc(db,'bouncers',user.uid),o,{merge:true});say(fReg,'Registration saved. Our team will contact you.','ok');}catch(x){say(fReg,msg(x),'err');}});
+
+  /* ===== ADMIN DASHBOARD ===== */
+  const admGate=$('#admGate'),admApp=$('#admApp'),admBody=$('#admBody');
+  const esc=function(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+  const fd=function(v){return v&&v.toDate?v.toDate().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):'';};
+  let isAdm=false,tab='overview',cache={};
+  async function all(c){var q=await D.getDocs(D.collection(db,c));return q.docs.map(function(d){return Object.assign({id:d.id},d.data());});}
+  function csv(name,cols,rows){var L=[cols.map(function(c){return c[0];})].concat(rows.map(function(r){return cols.map(function(c){return c[1](r);});}));
+    var t=L.map(function(r){return r.map(function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=name+'.csv';a.click();}
+  function hrs(st,en){if(!st||!en)return 0;var a=st.split(':'),b=en.split(':'),m=(+b[0]*60+ +b[1])-(+a[0]*60+ +a[1]);if(m<0)m+=1440;return Math.round(m/60*100)/100;}
+  function det(r){return Object.keys(r.fields||{}).map(function(k){return k+': '+r.fields[k];}).join('\n');}
+  const cols={
+    enq:[['Date',function(r){return fd(r.createdAt);}],['Type',function(r){return r.type;}],['Details',det]],
+    bnc:[['Name',function(r){return r.name;}],['Phone',function(r){return r.phone;}],['Email',function(r){return r.email;}],['City',function(r){return r.city;}],['Role',function(r){return r.role;}],['Years',function(r){return r.years;}],['Availability',function(r){return r.availability;}],['Status',function(r){return r.status||'pending';}],['About',function(r){return r.about;}]],
+    sh:[['Date',function(r){return r.date;}],['Person',function(r){return r.person;}],['Event',function(r){return r.event;}],['Start',function(r){return r.start;}],['End',function(r){return r.end;}],['Hours',function(r){return r.hours;}],['Notes',function(r){return r.notes;}]],
+    acc:[['Name',function(r){return r.name;}],['Email',function(r){return r.email;}],['Created',function(r){return r.created;}],['Last login',function(r){return fd(r.lastLogin);}],['User ID',function(r){return r.id;}]]
+  };
+  function table(head,rows){return '<div class="tw"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>'+(rows.join('')||'<tr><td colspan="'+head.length+'">Nothing here yet.</td></tr>')+'</tbody></table></div>';}
+  async function show(t){
+    tab=t;[].forEach.call(document.querySelectorAll('#admTabs button'),function(b){b.classList.toggle('on',b.dataset.t===t);});
+    admBody.innerHTML='<p>Loading…</p>';
+    try{
+      if(t==='overview'){
+        var u=await all('users'),b=await all('bouncers'),e=await all('enquiries'),sh=await all('shifts');
+        var pend=b.filter(function(x){return !x.status||x.status==='pending';}).length,th=sh.reduce(function(a,x){return a+(+x.hours||0);},0);
+        admBody.innerHTML='<div class="cards"><div><b>'+u.length+'</b>Accounts</div><div><b>'+b.length+'</b>Bouncer registrations ('+pend+' pending)</div><div><b>'+e.length+'</b>Bookings &amp; enquiries</div><div><b>'+Math.round(th*100)/100+'</b>Total duty hours logged</div></div>';
+      }else if(t==='enquiries'){
+        var e2=(await all('enquiries')).sort(function(a,b){return (b.createdAt&&b.createdAt.seconds||0)-(a.createdAt&&a.createdAt.seconds||0);});cache.enq=e2;
+        admBody.innerHTML='<div class="bar"><button class="btn sm" data-a="csv-enq">Download CSV</button><span class="note">Hire requests, event posts, bouncer applications and website messages sent from the site forms.</span></div>'+table(['Date','Type','Details',''],e2.map(function(r){return '<tr><td>'+esc(fd(r.createdAt))+'</td><td>'+esc(r.type)+'</td><td><pre>'+esc(det(r))+'</pre></td><td><button class="sm" data-a="del" data-c="enquiries" data-id="'+r.id+'">Delete</button></td></tr>';}));
+      }else if(t==='bouncers'){
+        var b2=await all('bouncers');cache.bnc=b2;
+        admBody.innerHTML='<div class="bar"><button class="btn sm" data-a="csv-bnc">Download CSV</button></div>'+table(['Name','Phone','Email','City','Role','Years','Availability','Status','About'],b2.map(function(r){var st=r.status||'pending';return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.phone)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.city)+'</td><td>'+esc(r.role)+'</td><td>'+esc(r.years)+'</td><td>'+esc(r.availability)+'</td><td><select data-a="status" data-id="'+r.id+'">'+['pending','approved','rejected'].map(function(o){return '<option'+(o===st?' selected':'')+'>'+o+'</option>';}).join('')+'</select></td><td><pre>'+esc(r.about)+'</pre></td></tr>';}));
+      }else if(t==='shifts'){
+        var s2=(await all('shifts')).sort(function(a,b){return String(b.date).localeCompare(String(a.date));}),b3=await all('bouncers');cache.sh=s2;
+        var tot={};s2.forEach(function(x){tot[x.person]=(tot[x.person]||0)+(+x.hours||0);});
+        admBody.innerHTML='<form class="sf" id="fShift"><input name="person" list="bn" placeholder="Bouncer name" required><datalist id="bn">'+b3.map(function(x){return '<option value="'+esc(x.name)+'">';}).join('')+'</datalist><input name="event" placeholder="Event / venue" required><input name="date" type="date" required><input name="start" type="time" required><input name="end" type="time" required><input name="notes" placeholder="Notes (optional)"><button class="btn" type="submit">Add duty</button></form>'
+          +'<div class="bar"><button class="btn sm" data-a="csv-sh">Download CSV</button><span class="note">Overnight shifts are handled automatically (e.g. 22:00 to 04:00 = 6 hours).</span></div>'
+          +table(['Date','Person','Event','Start','End','Hours','Notes',''],s2.map(function(r){return '<tr><td>'+esc(r.date)+'</td><td>'+esc(r.person)+'</td><td>'+esc(r.event)+'</td><td>'+esc(r.start)+'</td><td>'+esc(r.end)+'</td><td>'+esc(r.hours)+'</td><td>'+esc(r.notes)+'</td><td><button class="sm" data-a="del" data-c="shifts" data-id="'+r.id+'">Delete</button></td></tr>';}))
+          +'<h3 class="mini">Total hours per person</h3>'+table(['Person','Hours'],Object.keys(tot).map(function(k){return '<tr><td>'+esc(k)+'</td><td>'+Math.round(tot[k]*100)/100+'</td></tr>';}));
+      }else{
+        var a2=await all('users');cache.acc=a2;
+        admBody.innerHTML='<p class="note">For security, passwords are never stored or shown anywhere, not even to you. If someone forgets theirs, use “Send reset email”.</p><div class="bar"><button class="btn sm" data-a="csv-acc">Download CSV</button></div>'+table(['Name','Email','Created','Last login','User ID',''],a2.map(function(r){return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.created)+'</td><td>'+esc(fd(r.lastLogin))+'</td><td>'+esc(r.id)+'</td><td><button class="sm" data-a="reset" data-email="'+esc(r.email)+'">Send reset email</button></td></tr>';}));
+      }
+    }catch(x){admBody.innerHTML='<p>Could not load data. Check your Firestore rules and try again.</p>';}
+  }
+  $('#admTabs').addEventListener('click',function(e){var b=e.target.closest('button[data-t]');if(b)show(b.dataset.t);});
+  admBody.addEventListener('click',async function(e){var b=e.target.closest('button[data-a]');if(!b)return;var a=b.dataset.a;
+    if(a==='csv-enq')csv('enquiries',cols.enq,cache.enq);
+    else if(a==='csv-bnc')csv('bouncers',cols.bnc,cache.bnc);
+    else if(a==='csv-sh')csv('duty-hours',cols.sh,cache.sh);
+    else if(a==='csv-acc')csv('accounts',cols.acc,cache.acc);
+    else if(a==='del'){if(confirm('Delete this record? This cannot be undone.')){try{await D.deleteDoc(D.doc(db,b.dataset.c,b.dataset.id));show(tab);}catch(x){alert('Could not delete.');}}}
+    else if(a==='reset'){try{await U.sendPasswordResetEmail(auth,b.dataset.email);alert('Reset email sent to '+b.dataset.email);}catch(x){alert('Could not send the email.');}}
+  });
+  admBody.addEventListener('change',async function(e){var s=e.target.closest('select[data-a="status"]');if(!s)return;
+    try{await D.updateDoc(D.doc(db,'bouncers',s.dataset.id),{status:s.value});}catch(x){alert('Could not update status.');show(tab);}});
+  admBody.addEventListener('submit',async function(e){if(e.target.id!=='fShift')return;e.preventDefault();var f=e.target,o={};
+    ['person','event','date','start','end','notes'].forEach(function(k){o[k]=f[k].value.trim();});o.hours=hrs(o.start,o.end);o.createdAt=D.serverTimestamp();
+    try{await D.addDoc(D.collection(db,'shifts'),o);show('shifts');}catch(x){alert('Could not save the duty record.');}});
+  U.onAuthStateChanged(auth,async function(u){
+    if(u){try{await D.setDoc(D.doc(db,'users',u.uid),{name:u.displayName||'',email:u.email,created:(u.metadata&&u.metadata.creationTime)||'',lastLogin:D.serverTimestamp()},{merge:true});}catch(x){}}
+    isAdm=false;if(u){try{isAdm=(await D.getDoc(D.doc(db,'admins',u.uid))).exists();}catch(x){}}
+    admApp.hidden=!isAdm;admGate.hidden=isAdm;
+    if(!u)admGate.innerHTML='<p>Please <a href="#login">log in</a> with your admin account.</p>';
+    else if(!isAdm)admGate.innerHTML='<p>This account is not an admin yet. Your user ID is <code>'+esc(u.uid)+'</code>. Add it in Firebase as shown in the setup steps to get access.</p>';
+    if(isAdm)show(tab);
+  });
+  [].forEach.call(document.querySelectorAll('form.wa'),function(f){f.addEventListener('submit',function(){
+    try{var fields={};[].forEach.call(f.querySelectorAll('label'),function(l){var c=l.querySelector('input,select,textarea');if(c&&c.value.trim())fields[l.firstChild.textContent.trim()]=c.value.trim().slice(0,1000);});
+      if(Object.keys(fields).length)D.addDoc(D.collection(db,'enquiries'),{type:(f.dataset.title||'Enquiry').slice(0,70),fields:fields,createdAt:D.serverTimestamp()}).catch(function(){});}catch(x){}});});
+
 }
 </script>
 </body>
