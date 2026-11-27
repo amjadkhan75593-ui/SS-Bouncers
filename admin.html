@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – SS Bouncer’s</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0B0B;--bg2:#1C1C1C;--ink:#fff;--muted:#C9C9C9;--gold:#D4AF37;--line:rgba(212,175,55,.35);--bad:#ff7a7a;--ok:#6fdc8c;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.5 Inter,"Segoe UI",Arial,sans-serif}
+h1,h2,h3{font-family:"Bebas Neue","Arial Narrow",Impact,sans-serif;font-weight:400;letter-spacing:.04em;margin:0}
+a{color:var(--gold)}
+.wrap{max-width:1100px;margin:0 auto;padding:1rem}
+header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:.75rem 1rem;position:sticky;top:0;background:rgba(11,11,11,.95);z-index:5}
+header h1{font-size:1.8rem}header h1 span{color:var(--gold)}
+button,.btn{font:600 .95rem Inter,sans-serif;background:var(--gold);color:#0B0B0B;border:0;border-radius:3px;padding:.6rem 1rem;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--gold)}
+button.sm{padding:.3rem .6rem;font-size:.85rem}
+button.bad{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg2);border:1px solid rgba(255,255,255,.2);border-radius:3px;padding:.6rem .7rem;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold)}
+label{display:grid;gap:.3rem;font-weight:600;margin-bottom:.9rem}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:1.25rem;margin:1rem 0}
+.login{max-width:26rem;margin:3rem auto}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.tabs button{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.tabs button.on{background:var(--gold);color:#0B0B0B}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.stats div{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:1rem}
+.stats b{display:block;font:400 2.6rem/1 "Bebas Neue",Impact,sans-serif;color:var(--gold)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.92rem}
+th,td{border-bottom:1px solid rgba(255,255,255,.12);padding:.55rem .6rem;text-align:left;vertical-align:top}
+th{color:var(--gold);font-weight:600;white-space:nowrap}
+.bar{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.bar input,.bar select{width:auto;flex:1 1 180px}
+.row{display:grid;gap:0 1rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.msg{min-height:1.4rem;margin:.5rem 0 0}.err{color:var(--bad)}.ok{color:var(--ok)}
+.muted{color:var(--muted)}
+dialog{background:var(--bg2);color:var(--ink);border:1px solid var(--gold);border-radius:8px;width:min(92vw,560px);max-height:85vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.75)}
+pre{white-space:pre-wrap;word-break:break-word;font:inherit;color:var(--muted)}
+.lead{font-size:1.1rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>SS BOUNCERS <span>Admin Control Panel</span></h1><div id="who" hidden><span class="muted" id="email"></span> <button class="ghost sm" id="out">Log out</button></div></header>
+<div class="wrap">
+
+<div id="setup" class="card" hidden><h2>Setup needed</h2><p>Paste your Firebase settings in the marked block near the top of this file’s script, then upload it again.</p></div>
+
+<form id="fLogin" class="card login" hidden>
+  <h2>Admin Login</h2>
+  <p class="muted">Welcome to the SS Bouncers Admin Panel. Manage customer enquiries, bookings, security services, team members and website content from one secure dashboard.</p>
+  <label>Email Address<input type="email" name="email" placeholder="Enter your admin email" autocomplete="email" required></label>
+  <label>Password<input type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required></label>
+  <button type="submit">Login to Dashboard</button>
+  <p class="msg" id="mLogin" role="status"></p>
+  <p><button type="button" class="ghost sm" id="forgot">Forgot your password?</button></p>
+  <p class="muted" style="font-size:.85rem">Authorized personnel only. Secure access to business management.</p>
+</form>
+
+<div id="denied" class="card" hidden><h2>No admin access</h2><p>This account is not an administrator. Log out and sign in with the admin account.</p></div>
+
+<main id="app" hidden>
+  <div class="tabs" id="tabs">
+    <button data-t="over" class="on">Dashboard</button><button data-t="enq">Enquiries</button><button data-t="bkg">Bookings</button><button data-t="bou">Bouncers</button><button data-t="acc">Accounts</button><button data-t="hrs">Working hours</button>
+  </div>
+
+  <section id="t-over">
+    <p class="lead">Welcome back, Admin! Manage your security business, enquiries and bouncer registrations from one place.</p>
+    <div class="stats" id="stats"></div>
+    <p class="muted" style="margin-top:1rem">Passwords are never visible to anyone, including admins. Firebase stores them in a scrambled form. Use “Send reset email” in Accounts to help someone get back in.</p>
+  </section>
+
+  <section id="t-enq" hidden>
+    <div class="bar"><input id="qE" placeholder="Search name, phone, service, location…"><select id="sE"><option value="">All statuses</option><option>New</option><option>Contacted</option><option>Confirmed</option><option>Completed</option></select><button class="ghost" id="xE">Export CSV</button></div>
+    <div class="tw"><table><thead><tr><th>Received</th><th>Customer name</th><th>Phone</th><th>Service required</th><th>Event date</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody id="bE"></tbody></table></div>
+  </section>
+
+  <section id="t-bkg" hidden>
+    <p class="muted">Confirmed and completed enquiries, sorted by event date. Change the status in the Enquiries tab or here.</p>
+    <div class="tw"><table><thead><tr><th>Received</th><th>Customer name</th><th>Phone</th><th>Service required</th><th>Event date</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody id="bK"></tbody></table></div>
+  </section>
+
+  <section id="t-bou" hidden>
+    <div class="bar"><input id="qB" placeholder="Search name, phone, city, role…"><select id="sB"><option value="">All statuses</option><option>pending</option><option>approved</option><option>rejected</option></select><button class="ghost" id="xB">Export CSV</button></div>
+    <div class="tw"><table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Yrs</th><th>Role</th><th>Availability</th><th>Email</th><th>Status</th><th>About</th><th></th></tr></thead><tbody id="bB"></tbody></table></div>
+  </section>
+
+  <section id="t-acc" hidden>
+    <div class="bar"><input id="qA" placeholder="Search name or email…"><button class="ghost" id="xA">Export CSV</button></div>
+    <div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Account created</th><th>Last login</th><th></th></tr></thead><tbody id="bA"></tbody></table></div>
+    <p class="msg" id="mA" role="status"></p>
+  </section>
+
+  <section id="t-hrs" hidden>
+    <form id="fHrs" class="card">
+      <h3>Log working hours</h3>
+      <div class="row">
+        <label>Person<input name="person" list="people" required></label>
+        <label>Event / duty<input name="event" required></label>
+        <label>Date<input type="date" name="date" required></label>
+      </div>
+      <div class="row">
+        <label>Start<input type="time" name="start" required></label>
+        <label>End<input type="time" name="end" required></label>
+        <label>Notes<input name="notes"></label>
+      </div>
+      <datalist id="people"></datalist>
+      <button type="submit">Add shift</button>
+      <p class="msg" id="mH" role="status"></p>
+    </form>
+    <div class="bar"><select id="pH"><option value="">All people</option></select><input type="month" id="mo"><button class="ghost" id="xH">Export CSV</button></div>
+    <div class="card"><h3>Total hours</h3><div class="tw"><table><thead><tr><th>Person</th><th>Shifts</th><th>Hours</th></tr></thead><tbody id="bT"></tbody></table></div></div>
+    <div class="tw"><table><thead><tr><th>Date</th><th>Person</th><th>Event</th><th>Start</th><th>End</th><th>Hours</th><th>Notes</th><th></th></tr></thead><tbody id="bH"></tbody></table></div>
+  </section>
+</main>
+<dialog id="dv"><h3 id="dvH"></h3><pre id="dvP"></pre><p><button id="dvX">Close</button></p></dialog>
+</div>
+
+<script type="module">
+/* ===== PASTE YOUR FIREBASE SETTINGS HERE (same as the main site) ===== */
+const firebaseConfig={apiKey:"AIzaSyAnPhsqQFmAYUEvyx6Kl56PqHoYXR8a844",authDomain:"ss-bouncers-32d2b.firebaseapp.com",projectId:"ss-bouncers-32d2b",storageBucket:"ss-bouncers-32d2b.firebasestorage.app",messagingSenderId:"70658805070",appId:"1:70658805070:web:70f74ea5631879eb1be21f"};
+/* ===================================================================== */
+const $=q=>document.querySelector(q);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=t=>{try{return t&&t.toDate?t.toDate().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):'';}catch(e){return '';}};
+const say=(id,t,k)=>{const e=$(id);e.textContent=t;e.className='msg '+(k||'');};
+function csv(name,head,rows){
+  const q=v=>{v=String(v??'');if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';};
+  const t=[head].concat(rows).map(r=>r.map(q).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+if(/^PASTE/.test(firebaseConfig.apiKey)){$('#setup').hidden=false;}
+else{
+const A=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+const U=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+const D=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+const app=A.initializeApp(firebaseConfig),auth=U.getAuth(app),db=D.getFirestore(app);
+let B=[],AC=[],H=[],E=[];
+const col=n=>D.getDocs(D.collection(db,n)).then(s=>s.docs.map(d=>({id:d.id,...d.data()})));
+
+U.onAuthStateChanged(auth,async u=>{
+  ['#fLogin','#denied','#app','#who'].forEach(q=>$(q).hidden=true);
+  if(!u){$('#fLogin').hidden=false;return;}
+  $('#who').hidden=false;$('#email').textContent=u.email;
+  try{const a=await D.getDoc(D.doc(db,'admins',u.uid));
+    if(!a.exists()){$('#denied').hidden=false;return;}
+  }catch(e){$('#denied').hidden=false;return;}
+  $('#app').hidden=false;loadAll();
+});
+$('#fLogin').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;say('#mLogin','Logging in…');
+  try{await U.signInWithEmailAndPassword(auth,f.email.value.trim(),f.password.value);f.reset();say('#mLogin','');}
+  catch(x){say('#mLogin','Email or password is not correct.','err');}});
+$('#dvX').addEventListener('click',()=>$('#dv').close());
+$('#forgot').addEventListener('click',async()=>{const m=$('#fLogin').email.value.trim();if(!m){say('#mLogin','Enter your email above first.','err');return;}try{await U.sendPasswordResetEmail(auth,m);say('#mLogin','Password reset email sent. Check your inbox.','ok');}catch(x){say('#mLogin','Could not send reset email.','err');}});
+$('#out').addEventListener('click',()=>U.signOut(auth));
+
+async function loadAll(){
+  try{[B,AC,H,E]=await Promise.all([col('bouncers'),col('users'),col('shifts'),col('enquiries')]);}catch(e){alert('Could not load data. Check your Firestore rules and admin setup.');return;}
+  rStats();rE();rB();rA();rH();
+}
+function rStats(){
+  const hrs=H.reduce((s,x)=>s+(Number(x.hours)||0),0);
+  const n=k=>E.filter(e=>es(e)===k).length;
+  $('#stats').innerHTML=[['Total enquiries',E.length],['Pending requests',n('New')],['Bookings',n('Confirmed')+n('Completed')],['Bouncer registrations',B.length],['Accounts',AC.length],['Total hours',Math.round(hrs*100)/100]].map(x=>`<div><b>${esc(x[1])}</b>${esc(x[0])}</div>`).join('');
+}
+const ES=['New','Contacted','Confirmed','Completed'];
+const es=e=>ES.includes(e.status)?e.status:'New';
+const tel=p=>String(p||'').replace(/[^0-9+]/g,'');
+const tms=e=>e.createdAt&&e.createdAt.toMillis?e.createdAt.toMillis():0;
+function eRows(l){return l.map(e=>`<tr><td>${esc(fmt(e.createdAt))}</td><td>${esc(e.name)}</td><td><a href="tel:${esc(tel(e.phone))}">${esc(e.phone)}</a></td><td>${esc(e.service)}</td><td>${esc(e.eventDate)}</td><td>${esc(e.location)}</td><td><select data-est="${esc(e.id)}">${ES.map(o=>`<option${es(e)===o?' selected':''}>${o}</option>`).join('')}</select></td><td><button class="ghost sm" data-vie="${esc(e.id)}">View</button> <button class="bad sm" data-dele="${esc(e.id)}">Delete</button></td></tr>`).join('');}
+function fE(){const q=$('#qE').value.toLowerCase(),s=$('#sE').value;return E.filter(e=>(!s||es(e)===s)&&(!q||[e.name,e.phone,e.service,e.location,e.type].join(' ').toLowerCase().includes(q))).sort((a,b)=>tms(b)-tms(a));}
+function rE(){
+  $('#bE').innerHTML=eRows(fE())||'<tr><td colspan="8" class="muted">No enquiries yet.</td></tr>';
+  const bk=E.filter(e=>es(e)==='Confirmed'||es(e)==='Completed').sort((a,b)=>String(a.eventDate).localeCompare(String(b.eventDate)));
+  $('#bK').innerHTML=eRows(bk)||'<tr><td colspan="8" class="muted">No confirmed bookings yet.</td></tr>';
+}
+const st=b=>b.status||'pending';
+function fB(){const q=$('#qB').value.toLowerCase(),s=$('#sB').value;
+  return B.filter(b=>(!s||st(b)===s)&&(!q||[b.name,b.phone,b.city,b.role,b.email].join(' ').toLowerCase().includes(q)));}
+function rB(){
+  $('#bB').innerHTML=fB().map(b=>`<tr><td>${esc(b.name)}</td><td>${esc(b.phone)}</td><td>${esc(b.city)}</td><td>${esc(b.years)}</td><td>${esc(b.role)}</td><td>${esc(b.availability)}</td><td>${esc(b.email)}</td>
+  <td><select data-st="${esc(b.id)}">${['pending','approved','rejected'].map(o=>`<option${st(b)===o?' selected':''}>${o}</option>`).join('')}</select></td>
+  <td>${esc(b.about)}</td><td><button class="bad sm" data-delb="${esc(b.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="10" class="muted">No registrations yet.</td></tr>';
+  const names=[...new Set(B.map(b=>b.name).filter(Boolean))].sort();
+  $('#people').innerHTML=names.map(n=>`<option value="${esc(n)}">`).join('');
+}
+function fA(){const q=$('#qA').value.toLowerCase();return AC.filter(a=>!q||[a.name,a.email].join(' ').toLowerCase().includes(q));}
+function rA(){
+  $('#bA').innerHTML=fA().map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.email)}</td><td>${esc(fmt(a.createdAt))}</td><td>${esc(fmt(a.lastLogin))}</td><td><button class="ghost sm" data-rst="${esc(a.email)}">Send reset email</button></td></tr>`).join('')||'<tr><td colspan="5" class="muted">No accounts yet.</td></tr>';
+}
+function fH(){const p=$('#pH').value,m=$('#mo').value;return H.filter(x=>(!p||x.person===p)&&(!m||String(x.date).startsWith(m))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));}
+function rH(){
+  const names=[...new Set(H.map(x=>x.person).filter(Boolean))].sort(),cur=$('#pH').value;
+  $('#pH').innerHTML='<option value="">All people</option>'+names.map(n=>`<option${n===cur?' selected':''} value="${esc(n)}">${esc(n)}</option>`).join('');
+  const rows=fH(),tot={};rows.forEach(x=>{const t=tot[x.person]||(tot[x.person]={n:0,h:0});t.n++;t.h+=Number(x.hours)||0;});
+  $('#bT').innerHTML=Object.keys(tot).sort().map(k=>`<tr><td>${esc(k)}</td><td>${tot[k].n}</td><td>${Math.round(tot[k].h*100)/100}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">No shifts.</td></tr>';
+  $('#bH').innerHTML=rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.person)}</td><td>${esc(x.event)}</td><td>${esc(x.start)}</td><td>${esc(x.end)}</td><td>${esc(x.hours)}</td><td>${esc(x.notes)}</td><td><button class="bad sm" data-delh="${esc(x.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8" class="muted">No shifts logged yet.</td></tr>';
+}
+$('#tabs').addEventListener('click',e=>{const t=e.target.dataset.t;if(!t)return;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b===e.target));
+  ['over','enq','bkg','bou','acc','hrs'].forEach(k=>$('#t-'+k).hidden=k!==t);});
+['#qB','#sB'].forEach(q=>$(q).addEventListener('input',rB));
+['#qE','#sE'].forEach(q=>$(q).addEventListener('input',rE));
+$('#qA').addEventListener('input',rA);
+['#pH','#mo'].forEach(q=>$(q).addEventListener('input',rH));
+$('#xB').addEventListener('click',()=>csv('bouncers.csv',['Name','Phone','City','Years','Role','Availability','Email','Status','About'],fB().map(b=>[b.name,b.phone,b.city,b.years,b.role,b.availability,b.email,st(b),b.about])));
+$('#xE').addEventListener('click',()=>csv('enquiries.csv',['Received','Type','Name','Phone','Email','Service','Event date','Location','Status','Details'],fE().map(e=>[fmt(e.createdAt),e.type,e.name,e.phone,e.email,e.service,e.eventDate,e.location,es(e),e.details])));
+$('#xA').addEventListener('click',()=>csv('accounts.csv',['Name','Email','Created','Last login'],fA().map(a=>[a.name,a.email,fmt(a.createdAt),fmt(a.lastLogin)])));
+$('#xH').addEventListener('click',()=>csv('working-hours.csv',['Date','Person','Event','Start','End','Hours','Notes'],fH().map(x=>[x.date,x.person,x.event,x.start,x.end,x.hours,x.notes])));
+document.addEventListener('change',async e=>{const eid=e.target.dataset&&e.target.dataset.est;
+  if(eid){try{await D.updateDoc(D.doc(db,'enquiries',eid),{status:e.target.value});const x=E.find(y=>y.id===eid);if(x)x.status=e.target.value;rE();rStats();}catch(z){alert('Could not update status.');rE();}return;}
+  const id=e.target.dataset&&e.target.dataset.st;if(!id)return;
+  try{await D.updateDoc(D.doc(db,'bouncers',id),{status:e.target.value});const b=B.find(x=>x.id===id);if(b)b.status=e.target.value;rStats();}catch(x){alert('Could not update status.');rB();}});
+document.addEventListener('click',async e=>{const d=e.target.dataset||{};
+  if(d.vie){const x=E.find(y=>y.id===d.vie);if(x){$('#dvH').textContent=x.name||'Enquiry';$('#dvP').textContent=['Type: '+(x.type||''),'Phone: '+(x.phone||''),'Email: '+(x.email||''),'Service: '+(x.service||''),'Event date: '+(x.eventDate||''),'Location: '+(x.location||''),'Status: '+es(x),'Received: '+fmt(x.createdAt),'','Details:',x.details||''].join('\n');$('#dv').showModal();}}
+  if(d.dele&&confirm('Delete this enquiry? This cannot be undone.')){try{await D.deleteDoc(D.doc(db,'enquiries',d.dele));E=E.filter(y=>y.id!==d.dele);rE();rStats();}catch(x){alert('Could not delete.');}}
+  if(d.delb&&confirm('Delete this registration? This cannot be undone.')){try{await D.deleteDoc(D.doc(db,'bouncers',d.delb));B=B.filter(x=>x.id!==d.delb);rB();rStats();}catch(x){alert('Could not delete.');}}
+  if(d.delh&&confirm('Delete this shift?')){try{await D.deleteDoc(D.doc(db,'shifts',d.delh));H=H.filter(x=>x.id!==d.delh);rH();rStats();}catch(x){alert('Could not delete.');}}
+  if(d.rst){try{await U.sendPasswordResetEmail(auth,d.rst);say('#mA','Reset email sent to '+d.rst,'ok');}catch(x){say('#mA','Could not send reset email.','err');}}
+});
+$('#fHrs').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;
+  const [sh,sm]=f.start.value.split(':').map(Number),[eh,em]=f.end.value.split(':').map(Number);
+  let m=(eh*60+em)-(sh*60+sm);if(m<=0)m+=1440;
+  const o={person:f.person.value.trim(),event:f.event.value.trim(),date:f.date.value,start:f.start.value,end:f.end.value,hours:Math.round(m/60*100)/100,notes:f.notes.value.trim(),createdAt:D.serverTimestamp()};
+  say('#mH','Saving…');
+  try{const r=await D.addDoc(D.collection(db,'shifts'),o);H.push({id:r.id,...o});f.reset();say('#mH','Shift added ('+o.hours+' hours).','ok');rH();rStats();}
+  catch(x){say('#mH','Could not save. Check Firestore rules.','err');}});
+}
+</script>
+</body>
+</html>
